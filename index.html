@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TIMELINE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300;1,9..144,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
+
+  <style>
+    /* ─── VARIABLES ──────────────────────────────────────── */
+    :root {
+      --bg:        #F8F8F6;
+      --surface:   #FFFFFF;
+      --ink:       #111111;
+      --ink-2:     #555555;
+      --ink-3:     #999999;
+      --border:    #E4E4E0;
+      --border-2:  #CACAC4;
+      --accent:    #111111;
+      --sidebar-w: 272px;
+      --header-h:  52px;
+      --r:         6px;
+      --r-sm:      4px;
+      --font-d:    'Fraunces', Georgia, serif;
+      --font-b:    'DM Sans', system-ui, sans-serif;
+    }
+
+    /* ─── RESET ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-b);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; font-size: inherit; color: inherit; }
+    input { font-family: inherit; font-size: inherit; }
+    .hidden { display: none !important; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ─── LANDING ─────────────────────────────────────────── */
+    #landing {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .lnav {
+      width: 100%;
+      padding: 20px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .wordmark {
+      font-family: var(--font-d);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    .wordmark em { font-style: italic; font-weight: 300; }
+
+    .btn-solid {
+      padding: 8px 20px;
+      background: var(--ink);
+      color: #fff;
+      border-radius: var(--r);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.1px;
+      transition: opacity .15s;
+    }
+    .btn-solid:hover { opacity: .78; }
+
+    .btn-outline {
+      padding: 7px 16px;
+      border: 1px solid var(--border-2);
+      border-radius: var(--r);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-2);
+      transition: all .15s;
+    }
+    .btn-outline:hover { border-color: var(--ink); color: var(--ink); }
+
+    /* Hero */
+    .hero {
+      max-width: 660px;
+      padding: 88px 40px 64px;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: var(--font-d);
+      font-size: clamp(44px, 6vw, 68px);
+      font-weight: 300;
+      line-height: 1.02;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+    }
+    .hero h1 em { font-style: italic; }
+    .hero-sub {
+      font-size: 16px;
+      color: var(--ink-2);
+      font-weight: 300;
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 540px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .chip-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .chip {
+      padding: 5px 14px;
+      border: 1px solid var(--border-2);
+      border-radius: 100px;
+      font-size: 12px;
+      color: var(--ink-3);
+    }
+
+    /* Demo cards */
+    .demos-wrap {
+      width: 100%;
+      max-width: 1080px;
+      padding: 0 40px 96px;
+    }
+    .demos-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .demos-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+    @media (max-width: 860px) { .demos-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 480px) { .demos-grid { grid-template-columns: 1fr; } }
+
+    .demo-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .demo-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,.1); }
+
+    .demo-preview {
+      height: 130px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+    }
+    .demo-bar {
+      height: 7px;
+      border-radius: 4px;
+    }
+
+    .demo-body {
+      padding: 14px 16px 16px;
+      border-top: 1px solid var(--border);
+    }
+    .demo-cat {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 4px;
+    }
+    .demo-name {
+      font-family: var(--font-d);
+      font-size: 17px;
+      font-weight: 500;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+    .demo-open-btn {
+      font-size: 12px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: gap .15s;
+    }
+    .demo-card:hover .demo-open-btn { gap: 8px; }
+
+    /* ─── APP SHELL ──────────────────────────────────────── */
+    #app {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── HEADER ─────────────────────────────────────────── */
+    .app-hdr {
+      height: var(--header-h);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 12px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .hdr-back {
+      font-size: 12px;
+      color: var(--ink-3);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      padding: 4px 8px;
+      border-radius: var(--r-sm);
+      transition: all .15s;
+    }
+    .hdr-back:hover { background: var(--bg); color: var(--ink); }
+
+    .hdr-div { width: 1px; height: 26px; background: var(--border); flex-shrink: 0; }
+
+    .hdr-brand { flex: 1; min-width: 0; }
+    .hdr-co {
+      font-family: var(--font-d);
+      font-size: 15px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.2;
+      color: var(--accent);
+    }
+    .hdr-tag {
+      font-size: 11px;
+      color: var(--ink-3);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .view-tog {
+      display: flex;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 2px;
+      gap: 2px;
+    }
+    .view-tog button {
+      padding: 3px 12px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink-3);
+      transition: all .15s;
+    }
+    .view-tog button.active {
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    }
+
+    .hdr-spacer { flex: 1; }
+
+    .hdr-actions { display: flex; gap: 6px; align-items: center; }
+
+    .ico-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--r-sm);
+      color: var(--ink-3);
+      font-size: 15px;
+      transition: all .15s;
+    }
+    .ico-btn:hover { background: var(--bg); color: var(--ink); }
+    .ico-btn:disabled { opacity: .28; cursor: not-allowed; }
+
+    /* ─── APP BODY ────────────────────────────────────────── */
+    .app-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ─── SIDEBAR ────────────────────────────────────────── */
+    #sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .sb-sec {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sb-sec-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 10px;
+    }
+
+    /* Phase list */
+    .phase-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 8px;
+      border-radius: var(--r-sm);
+      cursor: pointer;
+      transition: background .1s;
+      margin-bottom: 2px;
+    }
+    .phase-item:hover { background: var(--bg); }
+    .ph-dot {
+      width: 10px; height: 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .ph-info { flex: 1; min-width: 0; }
+    .ph-name {
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ph-dates {
+      font-size: 10px;
+      color: var(--ink-3);
+    }
+    .ph-del {
+      width: 18px; height: 18px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 3px;
+      color: var(--ink-3);
+      font-size: 15px;
+      opacity: 0;
+      transition: all .1s;
+      flex-shrink: 0;
+    }
+    .phase-item:hover .ph-del { opacity: 1; }
+    .ph-del:hover { background: #fde8e8; color: #c00; }
+
+    .phase-empty {
+      font-size: 12px;
+      color: var(--ink-3);
+      text-align: center;
+      padding: 12px 0 4px;
+      line-height: 1.6;
+    }
+
+    .add-ph-btn {
+      width: 100%;
+      padding: 7px 8px;
+      border: 1.5px dashed var(--border-2);
+      border-radius: var(--r-sm);
+      color: var(--ink-3);
+      font-size: 12px;
+      font-weight: 500;
+      text-align: center;
+      margin-top: 8px;
+      transition: all .15s;
+    }
+    .add-ph-btn:hover { border-color: var(--ink); color: var(--ink); background: var(--bg); }
+
+    /* Sidebar inputs */
+    .sb-field { margin-bottom: 10px; }
+    .sb-label {
+      font-size: 11px;
+      color: var(--ink-3);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .sb-input {
+      width: 100%;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      font-size: 13px;
+      color: var(--ink);
+      background: var(--bg);
+      outline: none;
+      transition: border-color .15s;
+    }
+    .sb-input:focus { border-color: var(--ink); background: #fff; }
+
+    .color-input {
+      width: 100%;
+      height: 36px;
+      padding: 2px 4px;
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      background: var(--bg);
+      cursor: pointer;
+      outline: none;
+    }
+
+    .url-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 8px 10px;
+      font-size: 10px;
+      font-family: monospace;
+      color: var(--ink-2);
+      word-break: break-all;
+      max-height: 72px;
+      overflow-y: auto;
+      margin-bottom: 8px;
+    }
+
+    /* ─── MAIN AREA ──────────────────────────────────────── */
+    #mainArea {
+      flex: 1;
+      overflow: auto;
+      padding: 28px 32px;
+    }
+
+    /* ─── MONTH VIEW ──────────────────────────────────────── */
+    .month-block { margin-bottom: 44px; max-width: 760px; }
+    .month-hdr {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .month-title {
+      font-family: var(--font-d);
+      font-size: 26px;
+      font-weight: 500;
+      letter-spacing: -0.5px;
+      color: var(--ink);
+    }
+    .month-year {
+      font-family: var(--font-d);
+      font-size: 15px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--ink-3);
+    }
+
+    .cal-grid {
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden;
+      background: var(--surface);
+    }
+    .cal-dow-row {
+      display: grid;
+      grid-template-columns: repeat(7,1fr);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    .cal-dow {
+      padding: 8px 0;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: var(--ink-3);
+    }
+    .cal-days {
+      display: grid;
+      grid-template-columns: repeat(7,1fr);
+    }
+    .day-cell {
+      min-height: 82px;
+      padding: 8px 7px 6px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background .08s;
+      user-select: none;
+      position: relative;
+    }
+    .day-cell:nth-child(7n) { border-right: none; }
+    .cal-days .day-cell:nth-last-child(-n+7) { border-bottom: none; }
+    .day-cell:hover { background: var(--bg); }
+    .day-cell.other-month { opacity: .3; }
+    .day-cell.today .day-num {
+      background: var(--ink);
+      color: #fff;
+      border-radius: 50%;
+    }
+    .day-cell.sel-start, .day-cell.sel-end { background: rgba(0,0,0,.06); }
+    .day-cell.in-sel { background: rgba(0,0,0,.03); }
+
+    .day-num {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink-2);
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .day-phases { margin-top: 3px; display: flex; flex-direction: column; gap: 2px; }
+    .phase-chip {
+      font-size: 9px;
+      font-weight: 600;
+      padding: 1px 5px;
+      border-radius: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.5;
+    }
+    .phase-bar {
+      height: 5px;
+      border-radius: 3px;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 72px 20px;
+      color: var(--ink-3);
+    }
+    .empty-icon { font-size: 40px; margin-bottom: 18px; opacity: .4; }
+    .empty-state h3 {
+      font-family: var(--font-d);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--ink-2);
+      margin-bottom: 8px;
+    }
+    .empty-state p { font-size: 14px; font-weight: 300; line-height: 1.7; }
+
+    /* ─── GANTT VIEW ──────────────────────────────────────── */
+    .gantt-wrap { min-width: 560px; }
+    .gantt-hdr {
+      display: flex;
+      height: 36px;
+      border-bottom: 1px solid var(--border-2);
+      margin-bottom: 0;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 10;
+    }
+    .gantt-name-col {
+      width: 180px;
+      flex-shrink: 0;
+      border-right: 1px solid var(--border);
+    }
+    .gantt-axis { flex: 1; display: flex; overflow: hidden; }
+    .gantt-m-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-3);
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      border-right: 1px solid var(--border);
+      overflow: hidden;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .gantt-row {
+      display: flex;
+      height: 42px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+    }
+    .gantt-row-name {
+      width: 180px;
+      flex-shrink: 0;
+      padding: 0 12px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink);
+      border-right: 1px solid var(--border);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .gantt-row-track {
+      flex: 1;
+      position: relative;
+      height: 100%;
+    }
+    .gantt-bar {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 22px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      overflow: hidden;
+    }
+    .gantt-bar-lbl {
+      font-size: 10px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .gantt-today-line {
+      position: absolute;
+      top: 0;
+      width: 1.5px;
+      height: 100%;
+      background: var(--ink);
+      opacity: .25;
+      pointer-events: none;
+    }
+
+    /* ─── PHASE POPOVER ──────────────────────────────────── */
+    #phasePopover {
+      position: fixed;
+      z-index: 300;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 16px;
+      box-shadow: 0 8px 40px rgba(0,0,0,.13);
+      width: 256px;
+    }
+    .pop-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 6px;
+    }
+    .pop-dates {
+      font-size: 11px;
+      color: var(--ink-2);
+      margin-bottom: 12px;
+      font-family: var(--font-d);
+      font-style: italic;
+    }
+    .pop-input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      font-size: 13px;
+      outline: none;
+      margin-bottom: 10px;
+      background: var(--bg);
+    }
+    .pop-input:focus { border-color: var(--ink); background: #fff; }
+    .pop-swatches {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .swatch {
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform .1s, border-color .1s;
+    }
+    .swatch:hover { transform: scale(1.15); }
+    .swatch.on { border-color: var(--ink); }
+    .pop-actions { display: flex; gap: 8px; }
+    .pop-save {
+      flex: 1;
+      padding: 8px;
+      background: var(--ink);
+      color: #fff;
+      border-radius: var(--r-sm);
+      font-size: 12px;
+      font-weight: 600;
+      transition: opacity .15s;
+    }
+    .pop-save:hover { opacity: .8; }
+    .pop-cancel {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      font-size: 12px;
+      color: var(--ink-2);
+      transition: background .1s;
+    }
+    .pop-cancel:hover { background: var(--bg); }
+
+    /* ─── TOAST ──────────────────────────────────────────── */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--ink);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: var(--r);
+      font-size: 13px;
+      font-weight: 500;
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all .2s;
+      pointer-events: none;
+    }
+    #toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ─── PRINT ──────────────────────────────────────────── */
+    @media print {
+      #landing, .hdr-actions, #sidebar, .hdr-back,
+      .hdr-div, .view-tog, .hdr-spacer { display: none !important; }
+      #app { height: auto; }
+      .app-body { display: block; }
+      #mainArea { padding: 0; overflow: visible; }
+      .app-hdr { position: static; border-bottom: 2px solid #000; padding: 16px 0; margin-bottom: 20px; }
+      .hdr-co { font-size: 22px; }
+      .month-block { page-break-inside: avoid; }
+      .day-cell { min-height: 60px; }
+      @page { margin: 18mm; size: A4 landscape; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════
+     LANDING
+═══════════════════════════════════════════════════ -->
+<div id="landing">
+  <nav class="lnav">
+    <div class="wordmark">Time<em>line</em></div>
+    <button class="btn-solid" id="scratchBtn">Start from scratch →</button>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-eyebrow">Visual Process Planning</div>
+    <h1>Your process.<br><em>Beautifully explained.</em></h1>
+    <p class="hero-sub">Build a branded calendar for any process — medical treatment, renovation, event planning, production. Export a clean PDF or share a link your clients can keep.</p>
+    <div class="chip-row">
+      <span class="chip">No account needed</span>
+      <span class="chip">Your branding, not ours</span>
+      <span class="chip">Shareable URL</span>
+      <span class="chip">Export to PDF</span>
+    </div>
+  </section>
+
+  <section class="demos-wrap">
+    <div class="demos-label">Open a demo to see it in action</div>
+    <div class="demos-grid" id="demosGrid"></div>
+  </section>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     APP
+═══════════════════════════════════════════════════ -->
+<div id="app" class="hidden">
+  <header class="app-hdr">
+    <a href="#" class="hdr-back" id="backBtn">← Demos</a>
+    <div class="hdr-div"></div>
+    <div class="hdr-brand">
+      <div class="hdr-co" id="hdrCo">TIMELINE</div>
+      <div class="hdr-tag hidden" id="hdrTag"></div>
+    </div>
+    <div class="hdr-div"></div>
+    <div class="view-tog">
+      <button id="btnMonth" class="active">Month</button>
+      <button id="btnGantt">Gantt</button>
+    </div>
+    <div class="hdr-spacer"></div>
+    <div class="hdr-actions">
+      <button class="ico-btn" id="undoBtn" title="Undo (Ctrl+Z)" disabled>↩</button>
+      <button class="ico-btn" id="redoBtn" title="Redo (Ctrl+Shift+Z)" disabled>↪</button>
+      <button class="btn-outline" id="copyLinkBtn">Copy Link</button>
+      <button class="btn-solid" id="printBtn">Print / PDF</button>
+    </div>
+  </header>
+
+  <div class="app-body">
+    <!-- SIDEBAR -->
+    <aside id="sidebar">
+      <!-- Phases -->
+      <div class="sb-sec">
+        <div class="sb-sec-label">Phases</div>
+        <div id="phaseList"></div>
+        <button class="add-ph-btn" id="addPhBtn">+ Add phase</button>
+      </div>
+
+      <!-- Start date -->
+      <div class="sb-sec">
+        <div class="sb-sec-label">Timeline Start</div>
+        <div class="sb-field">
+          <input type="date" class="sb-input" id="startDateInput">
+        </div>
+      </div>
+
+      <!-- Branding -->
+      <div class="sb-sec">
+        <div class="sb-sec-label">Branding</div>
+        <div class="sb-field">
+          <label class="sb-label">Organization name</label>
+          <input type="text" class="sb-input" id="coInput" placeholder="Family Planning of NJ">
+        </div>
+        <div class="sb-field">
+          <label class="sb-label">Tagline</label>
+          <input type="text" class="sb-input" id="tagInput" placeholder="Guiding every step">
+        </div>
+        <div class="sb-field">
+          <label class="sb-label">Accent color</label>
+          <input type="color" class="color-input" id="accentInput" value="#111111">
+        </div>
+        <button class="btn-outline" style="width:100%;margin-top:4px" id="genUrlBtn">Generate my URL ↗</button>
+        <div id="urlArea" class="hidden" style="margin-top:10px">
+          <div class="url-box" id="urlBox"></div>
+          <button class="btn-solid" style="width:100%" id="copyUrlBtn">Copy URL</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main id="mainArea">
+      <div id="monthView"></div>
+      <div id="ganttView" class="hidden"></div>
+    </main>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PHASE POPOVER
+═══════════════════════════════════════════════════ -->
+<div id="phasePopover" class="hidden">
+  <div class="pop-title" id="popTitle">New Phase</div>
+  <div class="pop-dates" id="popDates"></div>
+  <input type="text" class="pop-input" id="popName" placeholder="e.g. Stimulation">
+  <div class="pop-swatches" id="popSwatches"></div>
+  <div class="pop-actions">
+    <button class="pop-save" id="popSave">Add Phase</button>
+    <button class="pop-cancel" id="popCancel">Cancel</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* CHANGELOG:
+   v01 - initial build | landing page, 4 demos, month + gantt views,
+         sidebar branding, click-drag phase creation, undo/redo,
+         URL state compression, print/PDF, generate URL panel
+*/
+
+'use strict';
+
+// ═══════════════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════════════
+
+const MONTHS_LONG  = ['January','February','March','April','May','June',
+                      'July','August','September','October','November','December'];
+const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun',
+                      'Jul','Aug','Sep','Oct','Nov','Dec'];
+const DOW_SHORT    = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+const TODAY_D = new Date();
+TODAY_D.setHours(0,0,0,0);
+const TODAY_S = d2s(TODAY_D);
+
+const PALETTE = [
+  '#111111','#555555','#888888','#AAAAAA',
+  '#ff5c00','#305cde','#007BA7','#096c6c','#873260','#750851'
+];
+
+// ─── DEMO DATA ─────────────────────────────────────
+const DEMOS = [
+  {
+    id:'ivf', cat:'Medical', label:'IVF Treatment',
+    co:'Family Planning of NJ', tag:'Guiding Every Step of Your Journey',
+    hex:'7f00ff',
+    phases:[
+      {name:'Baseline Labs',   days:5},
+      {name:'Suppression',     days:14},
+      {name:'Stimulation',     days:10},
+      {name:'Trigger Shot',    days:2},
+      {name:'Egg Retrieval',   days:2},
+      {name:'Transfer Prep',   days:7},
+      {name:'Embryo Transfer', days:2},
+      {name:'Two Week Wait',   days:14},
+    ]
+  },
+  {
+    id:'construction', cat:'Construction', label:'Home Renovation',
+    co:'Ridgeline Build Co.', tag:'Built Right. Built to Last.',
+    hex:'FFEF00',
+    phases:[
+      {name:'Demolition', days:5},
+      {name:'Foundation',  days:7},
+      {name:'Framing',     days:10},
+      {name:'Mechanical',  days:14},
+      {name:'Drywall',     days:7},
+      {name:'Finishing',   days:10},
+      {name:'Punch List',  days:5},
+    ]
+  },
+  {
+    id:'film', cat:'Film', label:'Film Production',
+    co:'Margot Rita Films', tag:'Stories That Stay With You',
+    hex:'873260',
+    phases:[
+      {name:'Development',            days:14},
+      {name:'Pre-Production',         days:21},
+      {name:'Principal Photography',  days:28},
+      {name:'Post-Production',        days:30},
+      {name:'Sound & Score',          days:14},
+      {name:'Delivery',               days:7},
+    ]
+  },
+  {
+    id:'wedding', cat:'Events', label:'Wedding Planning',
+    co:'Timeless Events Co.', tag:'Every Detail. Every Moment.',
+    hex:'111184',
+    phases:[
+      {name:'Venue & Date',   days:14},
+      {name:'Vendors',        days:21},
+      {name:'Invitations',    days:14},
+      {name:'Fittings',       days:14},
+      {name:'Final Details',  days:14},
+      {name:'Rehearsal',      days:2},
+      {name:'The Day',        days:1},
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+
+let state = {
+  co:'', tag:'', accent:'#111111',
+  startDate: TODAY_S,
+  phases: []
+};
+let undos = [];
+let redos = [];
+let currentView = 'month';
+let dragging = false;
+let dragA = null; // earlier date of drag
+let dragB = null; // later date of drag
+let selColor = PALETTE[0];
+let editingId = null;
+
+// ═══════════════════════════════════════════════════
+// DATE UTILS
+// ═══════════════════════════════════════════════════
+
+function d2s(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function s2d(s) {
+  const [y,m,d] = s.split('-').map(Number);
+  return new Date(y, m-1, d);
+}
+function addDays(s, n) {
+  const d = s2d(s);
+  d.setDate(d.getDate()+n);
+  return d2s(d);
+}
+function diffDays(a, b) {
+  return Math.round((s2d(b)-s2d(a))/86400000);
+}
+function fmtDisp(s) {
+  const d = s2d(s);
+  return `${MONTHS_SHORT[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+}
+function uid() {
+  return Math.random().toString(36).slice(2,9);
+}
+
+// ═══════════════════════════════════════════════════
+// COLOR UTILS
+// ═══════════════════════════════════════════════════
+
+function hex2rgb(h) {
+  const s = h.replace('#','');
+  return [parseInt(s.slice(0,2),16), parseInt(s.slice(2,4),16), parseInt(s.slice(4,6),16)];
+}
+function rgb2hex(r,g,b) {
+  const cl = v => Math.min(255,Math.max(0,Math.round(v))).toString(16).padStart(2,'0');
+  return '#'+cl(r)+cl(g)+cl(b);
+}
+function rgb2hsl(r,g,b) {
+  r/=255; g/=255; b/=255;
+  const mx=Math.max(r,g,b), mn=Math.min(r,g,b);
+  let h,s,l=(mx+mn)/2;
+  if(mx===mn){h=s=0;}
+  else {
+    const d=mx-mn;
+    s=l>.5?d/(2-mx-mn):d/(mx+mn);
+    switch(mx){
+      case r: h=((g-b)/d+(g<b?6:0))/6; break;
+      case g: h=((b-r)/d+2)/6; break;
+      default: h=((r-g)/d+4)/6;
+    }
+  }
+  return [h*360,s*100,l*100];
+}
+function hsl2rgb(h,s,l) {
+  h/=360; s/=100; l/=100;
+  if(s===0) { const v=l*255; return [v,v,v]; }
+  const q=l<.5?l*(1+s):l+s-l*s, p=2*l-q;
+  const hue=(p,q,t)=>{
+    if(t<0)t+=1; if(t>1)t-=1;
+    if(t<1/6)return p+(q-p)*6*t;
+    if(t<1/2)return q;
+    if(t<2/3)return p+(q-p)*(2/3-t)*6;
+    return p;
+  };
+  return [hue(p,q,h+1/3)*255, hue(p,q,h)*255, hue(p,q,h-1/3)*255];
+}
+
+function genPalette(hexBase, n=8) {
+  const [r,g,b] = hex2rgb(hexBase);
+  const [h,s,l]  = rgb2hsl(r,g,b);
+  const isLight  = l > 65;
+  const lo = isLight ? 30 : 20;
+  const hi = isLight ? 68 : 72;
+  const colors = [];
+  for(let i=0;i<n;i++){
+    const nl = lo + i*(hi-lo)/(n-1);
+    const ns = Math.min(s*(isLight?1.15:1),100);
+    const [nr,ng,nb] = hsl2rgb(h,ns,nl);
+    colors.push(rgb2hex(nr,ng,nb));
+  }
+  return colors;
+}
+
+function textOnBg(hex) {
+  const [r,g,b] = hex2rgb(hex);
+  return (0.299*r+0.587*g+0.114*b)/255 > 0.52 ? '#111111' : '#FFFFFF';
+}
+
+// ═══════════════════════════════════════════════════
+// URL STATE
+// ═══════════════════════════════════════════════════
+
+function encodeState(s) {
+  try { return LZString.compressToEncodedURIComponent(JSON.stringify(s)); }
+  catch(e){ return ''; }
+}
+function decodeState(str) {
+  try { const j=LZString.decompressFromEncodedURIComponent(str); return j?JSON.parse(j):null; }
+  catch(e){ return null; }
+}
+
+function loadURL() {
+  const params = new URLSearchParams(window.location.search);
+  const hash   = window.location.hash.slice(1);
+  let loaded   = false;
+
+  if(hash) {
+    const decoded = decodeState(hash);
+    if(decoded) { state = {...state,...decoded}; loaded = true; }
+  }
+  // Branding params override
+  if(params.get('co'))    state.co     = decodeURIComponent(params.get('co'));
+  if(params.get('tag'))   state.tag    = decodeURIComponent(params.get('tag'));
+  if(params.get('color')) state.accent = '#'+params.get('color').replace('#','');
+
+  return loaded || !!params.get('co');
+}
+
+function shareURL() {
+  return `${location.origin}${location.pathname}#${encodeState(state)}`;
+}
+function brandURL() {
+  const p = new URLSearchParams();
+  if(state.co)  p.set('co',  state.co);
+  if(state.tag) p.set('tag', state.tag);
+  if(state.accent && state.accent!=='#111111') p.set('color', state.accent.replace('#',''));
+  return `${location.origin}${location.pathname}?${p.toString()}`;
+}
+
+// ═══════════════════════════════════════════════════
+// UNDO / REDO
+// ═══════════════════════════════════════════════════
+
+function snap() {
+  undos.push(JSON.stringify(state));
+  redos = [];
+  syncUndoRedo();
+}
+function undo() {
+  if(!undos.length) return;
+  redos.push(JSON.stringify(state));
+  state = JSON.parse(undos.pop());
+  syncUndoRedo(); syncSidebar(); applyAccent(); render();
+}
+function redo() {
+  if(!redos.length) return;
+  undos.push(JSON.stringify(state));
+  state = JSON.parse(redos.pop());
+  syncUndoRedo(); syncSidebar(); applyAccent(); render();
+}
+function syncUndoRedo() {
+  document.getElementById('undoBtn').disabled = !undos.length;
+  document.getElementById('redoBtn').disabled = !redos.length;
+}
+
+// ═══════════════════════════════════════════════════
+// BUILD DEMO STATE
+// ═══════════════════════════════════════════════════
+
+function buildDemo(demo) {
+  const pal    = genPalette('#'+demo.hex, demo.phases.length);
+  const phases = [];
+  let cur      = TODAY_S;
+  demo.phases.forEach((p,i) => {
+    const end = addDays(cur, p.days-1);
+    phases.push({ id:uid(), name:p.name, startDate:cur, endDate:end, color:pal[i] });
+    cur = addDays(end, 1);
+  });
+  return { co:demo.co, tag:demo.tag, accent:'#'+demo.hex, startDate:TODAY_S, phases };
+}
+
+// ═══════════════════════════════════════════════════
+// LANDING
+// ═══════════════════════════════════════════════════
+
+function renderLanding() {
+  const grid = document.getElementById('demosGrid');
+  grid.innerHTML = '';
+  DEMOS.forEach(demo => {
+    const pal = genPalette('#'+demo.hex, demo.phases.length);
+    const barsHTML = demo.phases.map((p,i) => {
+      const w = Math.max(18, Math.min(100, (p.days/28)*100));
+      return `<div class="demo-bar" style="width:${w}%;background:${pal[i]}"></div>`;
+    }).join('');
+    const card = document.createElement('div');
+    card.className = 'demo-card';
+    card.innerHTML = `
+      <div class="demo-preview" style="background:${pal[0]}1a">${barsHTML}</div>
+      <div class="demo-body">
+        <div class="demo-cat">${demo.cat}</div>
+        <div class="demo-name">${demo.label}</div>
+        <div class="demo-open-btn" style="color:#${demo.hex}">Open demo →</div>
+      </div>`;
+    card.addEventListener('click', () => loadDemo(demo.id));
+    grid.appendChild(card);
+  });
+}
+
+function loadDemo(id) {
+  const demo = DEMOS.find(d=>d.id===id);
+  if(!demo) return;
+  state = buildDemo(demo);
+  undos = []; redos = [];
+  showApp();
+}
+
+function showLanding() {
+  document.getElementById('landing').classList.remove('hidden');
+  document.getElementById('app').classList.add('hidden');
+  history.pushState({}, '', location.pathname);
+}
+function showApp() {
+  document.getElementById('landing').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  syncSidebar(); applyAccent(); render();
+}
+
+// ═══════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════
+
+function render() {
+  renderPhaseList();
+  if(currentView==='month') renderMonthView();
+  else renderGanttView();
+  renderHeader();
+  syncUndoRedo();
+}
+
+function renderHeader() {
+  const co = document.getElementById('hdrCo');
+  const tg = document.getElementById('hdrTag');
+  co.textContent = state.co || 'TIMELINE';
+  if(state.tag){ tg.textContent=state.tag; tg.classList.remove('hidden'); }
+  else tg.classList.add('hidden');
+}
+function applyAccent() {
+  if(state.accent) document.documentElement.style.setProperty('--accent', state.accent);
+}
+
+// ─── PHASE LIST ───────────────────────────────────
+
+function renderPhaseList() {
+  const list = document.getElementById('phaseList');
+  if(!state.phases.length) {
+    list.innerHTML = '<div class="phase-empty">No phases yet.<br>Click and drag on the calendar to add one.</div>';
+    return;
+  }
+  list.innerHTML = state.phases.map(p=>`
+    <div class="phase-item" data-id="${p.id}">
+      <div class="ph-dot" style="background:${p.color}"></div>
+      <div class="ph-info">
+        <div class="ph-name">${escHtml(p.name)}</div>
+        <div class="ph-dates">${fmtDisp(p.startDate)} → ${fmtDisp(p.endDate)}</div>
+      </div>
+      <button class="ph-del" data-id="${p.id}" title="Delete">×</button>
+    </div>`).join('');
+
+  list.querySelectorAll('.ph-del').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      e.stopPropagation();
+      snap();
+      state.phases = state.phases.filter(p=>p.id!==btn.dataset.id);
+      render();
+    });
+  });
+  list.querySelectorAll('.phase-item').forEach(item=>{
+    item.addEventListener('click', e=>{
+      if(e.target.classList.contains('ph-del')) return;
+      openEditPhase(item.dataset.id);
+    });
+  });
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ─── MONTH VIEW ──────────────────────────────────
+
+function dateRange() {
+  if(!state.phases.length) {
+    const n = new Date();
+    return { s: new Date(n.getFullYear(),n.getMonth(),1),
+             e: new Date(n.getFullYear(),n.getMonth()+1,28) };
+  }
+  let mn = state.phases[0].startDate, mx = state.phases[0].endDate;
+  state.phases.forEach(p=>{ if(p.startDate<mn)mn=p.startDate; if(p.endDate>mx)mx=p.endDate; });
+  const s = s2d(mn); s.setDate(1);
+  const e = s2d(mx); e.setMonth(e.getMonth()+1); e.setDate(0);
+  return {s,e};
+}
+
+function renderMonthView() {
+  const mv = document.getElementById('monthView');
+  const {s,e} = dateRange();
+  const months = [];
+  let cur = new Date(s.getFullYear(), s.getMonth(), 1);
+  while(cur<=e){ months.push(new Date(cur)); cur.setMonth(cur.getMonth()+1); }
+  mv.innerHTML = months.length ? months.map(renderMonthBlock).join('') : emptyState();
+  attachDragEvents();
+}
+
+function renderMonthBlock(mDate) {
+  const yr = mDate.getFullYear(), mo = mDate.getMonth();
+  const firstDow  = new Date(yr,mo,1).getDay();
+  const daysInMo  = new Date(yr,mo+1,0).getDate();
+  const daysInPrv = new Date(yr,mo,0).getDate();
+
+  const cells = [];
+  for(let i=0;i<firstDow;i++){
+    const day=daysInPrv-firstDow+1+i;
+    cells.push({d:new Date(yr,mo-1,day), other:true});
+  }
+  for(let d=1;d<=daysInMo;d++) cells.push({d:new Date(yr,mo,d), other:false});
+  const rem = 42 - cells.length;
+  for(let d=1;d<=rem;d++) cells.push({d:new Date(yr,mo+1,d), other:true});
+
+  const dayHTML = cells.map(c=>{
+    const ds     = d2s(c.d);
+    const isToday= ds===TODAY_S;
+    const phases = state.phases.filter(p=>p.startDate<=ds && p.endDate>=ds);
+    let pHTML = '';
+    if(phases.length){
+      pHTML='<div class="day-phases">'+phases.map(p=>{
+        const tc = textOnBg(p.color);
+        if(p.startDate===ds)
+          return `<div class="phase-chip" style="background:${p.color};color:${tc}">${escHtml(p.name)}</div>`;
+        return `<div class="phase-bar" style="background:${p.color}"></div>`;
+      }).join('')+'</div>';
+    }
+    return `<div class="day-cell${c.other?' other-month':''}${isToday?' today':''}" data-date="${ds}">
+      <div class="day-num">${c.d.getDate()}</div>${pHTML}</div>`;
+  }).join('');
+
+  return `<div class="month-block">
+    <div class="month-hdr">
+      <span class="month-title">${MONTHS_LONG[mo]}</span>
+      <span class="month-year">${yr}</span>
+    </div>
+    <div class="cal-grid">
+      <div class="cal-dow-row">${DOW_SHORT.map(d=>`<div class="cal-dow">${d}</div>`).join('')}</div>
+      <div class="cal-days">${dayHTML}</div>
+    </div>
+  </div>`;
+}
+
+function emptyState() {
+  return `<div class="empty-state">
+    <div class="empty-icon">📅</div>
+    <h3>No phases yet</h3>
+    <p>Click and drag on the calendar to create a phase,<br>or use "+ Add phase" in the sidebar.</p>
+  </div>`;
+}
+
+// ─── DRAG-TO-SELECT ───────────────────────────────
+
+function attachDragEvents() {
+  document.querySelectorAll('.day-cell').forEach(cell=>{
+    cell.addEventListener('mousedown', e=>{
+      if(e.button!==0) return;
+      dragging=true; dragA=cell.dataset.date; dragB=cell.dataset.date;
+      updateSelHighlight(); e.preventDefault();
+    });
+    cell.addEventListener('mouseenter', ()=>{
+      if(!dragging) return;
+      dragB=cell.dataset.date; updateSelHighlight();
+    });
+  });
+}
+
+function updateSelHighlight() {
+  if(!dragging||!dragA) return;
+  const [lo,hi] = dragA<=dragB ? [dragA,dragB] : [dragB,dragA];
+  document.querySelectorAll('.day-cell').forEach(c=>{
+    const d=c.dataset.date;
+    c.classList.remove('sel-start','sel-end','in-sel');
+    if(d===lo)      c.classList.add('sel-start');
+    else if(d===hi) c.classList.add('sel-end');
+    else if(d>lo&&d<hi) c.classList.add('in-sel');
+  });
+}
+
+function clearSelHighlight() {
+  document.querySelectorAll('.day-cell').forEach(c=>{
+    c.classList.remove('sel-start','sel-end','in-sel');
+  });
+}
+
+// ─── GANTT VIEW ───────────────────────────────────
+
+function renderGanttView() {
+  const gv = document.getElementById('ganttView');
+  if(!state.phases.length) {
+    gv.innerHTML=`<div class="empty-state"><div class="empty-icon">📊</div>
+      <h3>No phases yet</h3><p>Add phases in Month view to see them here.</p></div>`;
+    return;
+  }
+  let mn=state.phases[0].startDate, mx=state.phases[0].endDate;
+  state.phases.forEach(p=>{ if(p.startDate<mn)mn=p.startDate; if(p.endDate>mx)mx=p.endDate; });
+  const total = diffDays(mn,mx)+1;
+
+  // Month segments
+  const segs=[];
+  let c=s2d(mn); c.setDate(1);
+  while(d2s(c)<=mx){
+    const y=c.getFullYear(),m=c.getMonth();
+    const ss=d2s(new Date(y,m,1)), se=d2s(new Date(y,m+1,0));
+    const cs=ss<mn?mn:ss, ce=se>mx?mx:se;
+    segs.push({lbl:`${MONTHS_SHORT[m]} ${y}`, days:diffDays(cs,ce)+1});
+    c.setMonth(c.getMonth()+1);
+  }
+
+  const mLabels = segs.map(s=>
+    `<div class="gantt-m-label" style="width:${(s.days/total)*100}%">${s.lbl}</div>`
+  ).join('');
+
+  const rows = state.phases.map(p=>{
+    const off  = diffDays(mn, p.startDate);
+    const dur  = diffDays(p.startDate, p.endDate)+1;
+    const left = (off/total)*100;
+    const wid  = Math.max((dur/total)*100, 0.5);
+    const tc   = textOnBg(p.color);
+    return `<div class="gantt-row">
+      <div class="gantt-row-name">${escHtml(p.name)}</div>
+      <div class="gantt-row-track">
+        <div class="gantt-bar" style="left:${left}%;width:${wid}%;background:${p.color}">
+          <span class="gantt-bar-lbl" style="color:${tc}">${escHtml(p.name)}</span>
+        </div>
+        ${TODAY_S>=mn&&TODAY_S<=mx ? `<div class="gantt-today-line" style="left:${(diffDays(mn,TODAY_S)/total)*100}%"></div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  gv.innerHTML=`<div class="gantt-wrap">
+    <div class="gantt-hdr">
+      <div class="gantt-name-col"></div>
+      <div class="gantt-axis">${mLabels}</div>
+    </div>${rows}</div>`;
+}
+
+// ═══════════════════════════════════════════════════
+// SIDEBAR SYNC
+// ═══════════════════════════════════════════════════
+
+function syncSidebar() {
+  document.getElementById('coInput').value    = state.co||'';
+  document.getElementById('tagInput').value   = state.tag||'';
+  document.getElementById('accentInput').value = state.accent||'#111111';
+  document.getElementById('startDateInput').value = state.startDate||TODAY_S;
+}
+
+// ═══════════════════════════════════════════════════
+// POPOVER
+// ═══════════════════════════════════════════════════
+
+function openPopover(startDate, endDate, mouseEvt, isEdit) {
+  const pop = document.getElementById('phasePopover');
+  document.getElementById('popTitle').textContent = isEdit ? 'Edit Phase' : 'New Phase';
+  document.getElementById('popSave').textContent  = isEdit ? 'Save Changes' : 'Add Phase';
+  document.getElementById('popDates').textContent = `${fmtDisp(startDate)} → ${fmtDisp(endDate)}`;
+  renderSwatches();
+
+  pop.classList.remove('hidden');
+  pop.style.transform = '';
+
+  if(mouseEvt) {
+    const x = Math.min(mouseEvt.clientX+12, window.innerWidth-268);
+    const y = Math.min(mouseEvt.clientY+12, window.innerHeight-240);
+    pop.style.left=x+'px'; pop.style.top=y+'px';
+  } else {
+    pop.style.left='50%'; pop.style.top='50%';
+    pop.style.transform='translate(-50%,-50%)';
+  }
+
+  document.getElementById('popName').focus();
+}
+
+function closePopover() {
+  document.getElementById('phasePopover').classList.add('hidden');
+  document.getElementById('phasePopover').style.transform='';
+  editingId=null;
+}
+
+function renderSwatches() {
+  const c = document.getElementById('popSwatches');
+  c.innerHTML = PALETTE.map(col=>
+    `<div class="swatch${col===selColor?' on':''}" style="background:${col}" data-c="${col}"></div>`
+  ).join('');
+  c.querySelectorAll('.swatch').forEach(sw=>{
+    sw.addEventListener('click',()=>{
+      selColor=sw.dataset.c;
+      c.querySelectorAll('.swatch').forEach(s=>s.classList.toggle('on',s.dataset.c===selColor));
+    });
+  });
+}
+
+function openNewPhase(start, end, evt) {
+  editingId=null;
+  selColor = PALETTE[state.phases.length % PALETTE.length];
+  document.getElementById('popName').value='';
+  openPopover(start, end, evt, false);
+  document.getElementById('popSave').onclick = ()=>{
+    const name=document.getElementById('popName').value.trim();
+    if(!name){ document.getElementById('popName').focus(); return; }
+    snap();
+    state.phases.push({id:uid(), name, startDate:start, endDate:end, color:selColor});
+    state.phases.sort((a,b)=>a.startDate.localeCompare(b.startDate));
+    closePopover(); render();
+  };
+}
+
+function openEditPhase(id) {
+  const phase=state.phases.find(p=>p.id===id);
+  if(!phase) return;
+  editingId=id; selColor=phase.color;
+  document.getElementById('popName').value=phase.name;
+  openPopover(phase.startDate, phase.endDate, null, true);
+  document.getElementById('popSave').onclick = ()=>{
+    const name=document.getElementById('popName').value.trim();
+    if(!name){ document.getElementById('popName').focus(); return; }
+    snap();
+    const p=state.phases.find(p=>p.id===editingId);
+    if(p){ p.name=name; p.color=selColor; }
+    closePopover(); render();
+  };
+}
+
+function openAddManual() {
+  let start=state.startDate||TODAY_S;
+  if(state.phases.length){
+    const last=[...state.phases].sort((a,b)=>b.endDate.localeCompare(a.endDate))[0];
+    start=addDays(last.endDate,1);
+  }
+  const end=addDays(start,6);
+  editingId=null; selColor=PALETTE[state.phases.length%PALETTE.length];
+  document.getElementById('popName').value='';
+  openPopover(start,end,null,false);
+  document.getElementById('popSave').onclick = ()=>{
+    const name=document.getElementById('popName').value.trim();
+    if(!name){ document.getElementById('popName').focus(); return; }
+    snap();
+    state.phases.push({id:uid(), name, startDate:start, endDate:end, color:selColor});
+    state.phases.sort((a,b)=>a.startDate.localeCompare(b.startDate));
+    closePopover(); render();
+  };
+}
+
+// ═══════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════
+
+function toast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ═══════════════════════════════════════════════════
+// EVENT WIRING
+// ═══════════════════════════════════════════════════
+
+function wire() {
+  // Landing
+  document.getElementById('scratchBtn').addEventListener('click',()=>{
+    state={co:'',tag:'',accent:'#111111',startDate:TODAY_S,phases:[]};
+    undos=[]; redos=[];
+    showApp();
+  });
+  document.getElementById('backBtn').addEventListener('click',e=>{
+    e.preventDefault(); showLanding();
+  });
+
+  // View toggle
+  document.getElementById('btnMonth').addEventListener('click',()=>{
+    currentView='month';
+    document.getElementById('btnMonth').classList.add('active');
+    document.getElementById('btnGantt').classList.remove('active');
+    document.getElementById('monthView').classList.remove('hidden');
+    document.getElementById('ganttView').classList.add('hidden');
+    render();
+  });
+  document.getElementById('btnGantt').addEventListener('click',()=>{
+    currentView='gantt';
+    document.getElementById('btnGantt').classList.add('active');
+    document.getElementById('btnMonth').classList.remove('active');
+    document.getElementById('ganttView').classList.remove('hidden');
+    document.getElementById('monthView').classList.add('hidden');
+    render();
+  });
+
+  // Undo / Redo
+  document.getElementById('undoBtn').addEventListener('click', undo);
+  document.getElementById('redoBtn').addEventListener('click', redo);
+  document.addEventListener('keydown', e=>{
+    if((e.metaKey||e.ctrlKey)&&e.key==='z'&&!e.shiftKey){ e.preventDefault(); undo(); }
+    if((e.metaKey||e.ctrlKey)&&(e.key==='y'||(e.key==='z'&&e.shiftKey))){ e.preventDefault(); redo(); }
+    if(e.key==='Escape') closePopover();
+  });
+
+  // Global mouseup for drag-to-select
+  document.addEventListener('mouseup', e=>{
+    if(!dragging) return;
+    dragging=false;
+    clearSelHighlight();
+    if(!dragA||!dragB) return;
+    const [lo,hi] = dragA<=dragB ? [dragA,dragB] : [dragB,dragA];
+    // Only open if meaningful (at least a 1-day click)
+    dragA=null; dragB=null;
+    openNewPhase(lo, hi, e);
+  });
+
+  // Share
+  document.getElementById('copyLinkBtn').addEventListener('click',()=>{
+    const url=shareURL();
+    navigator.clipboard.writeText(url)
+      .then(()=>toast('Link copied to clipboard!'))
+      .catch(()=>{ const ta=document.createElement('textarea'); ta.value=url; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); toast('Link copied!'); });
+  });
+  document.getElementById('printBtn').addEventListener('click',()=>window.print());
+
+  // Sidebar inputs
+  document.getElementById('coInput').addEventListener('input',e=>{ state.co=e.target.value; renderHeader(); });
+  document.getElementById('tagInput').addEventListener('input',e=>{ state.tag=e.target.value; renderHeader(); });
+  document.getElementById('accentInput').addEventListener('input',e=>{ state.accent=e.target.value; applyAccent(); });
+  document.getElementById('startDateInput').addEventListener('change',e=>{ state.startDate=e.target.value; });
+
+  // Add phase btn
+  document.getElementById('addPhBtn').addEventListener('click', openAddManual);
+
+  // Popover cancel + enter
+  document.getElementById('popCancel').addEventListener('click', closePopover);
+  document.getElementById('popName').addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('popSave').click(); });
+
+  // Click outside popover
+  document.addEventListener('mousedown', e=>{
+    const pop=document.getElementById('phasePopover');
+    if(!pop.classList.contains('hidden')&&!pop.contains(e.target)&&e.target.className!=='day-cell') closePopover();
+  });
+
+  // Generate URL
+  document.getElementById('genUrlBtn').addEventListener('click',()=>{
+    const area=document.getElementById('urlArea');
+    document.getElementById('urlBox').textContent=brandURL();
+    area.classList.toggle('hidden');
+  });
+  document.getElementById('copyUrlBtn').addEventListener('click',()=>{
+    const url=document.getElementById('urlBox').textContent;
+    navigator.clipboard.writeText(url).then(()=>toast('Branding URL copied!')).catch(()=>toast('Copy failed'));
+  });
+}
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  renderLanding();
+  const hasState = loadURL();
+  if(hasState) showApp();
+  wire();
+});
+</script>
+</body>
+</html>
