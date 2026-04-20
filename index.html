@@ -155,17 +155,10 @@
 
     /* Hero */
     .hero {
-      max-width: 660px;
+      max-width: 1080px;
+      width: 100%;
       padding: 64px 20px 48px;
       text-align: center;
-    }
-    .hero-eyebrow {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      color: var(--ink-3);
-      margin-bottom: 24px;
     }
     .hero h1 {
       font-family: var(--font-d);
@@ -174,8 +167,19 @@
       line-height: 1.02;
       letter-spacing: -2px;
       margin-bottom: 24px;
+      max-width: 660px;
+      margin-left: auto;
+      margin-right: auto;
     }
     .hero h1 em { font-style: italic; }
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 24px;
+    }
     .hero-sub {
       font-size: clamp(13px, 3.5vw, 16px);
       color: var(--ink-2);
@@ -202,8 +206,8 @@
     }
     .hero-col:last-child { border-bottom: none; }
     @media (min-width: 640px) {
-      .hero-cols { flex-direction: row; max-width: 660px; }
-      .hero-col { border-bottom: none; border-right: 1px solid var(--border); padding: 0 24px; }
+      .hero-cols { flex-direction: row; max-width: none; }
+      .hero-col { border-bottom: none; border-right: 1px solid var(--border); padding: 0 24px; flex: 1; }
       .hero-col:first-child { padding-left: 0; }
       .hero-col:last-child  { padding-right: 0; border-right: none; }
     }
@@ -213,6 +217,15 @@
       font-weight: 400;
       line-height: 1.7;
       margin: 0;
+      text-wrap: auto;
+    }
+    /* Mobile/narrow: render <br> as a space so words don't collide.
+       Desktop: let the <br> actually break the line. */
+    .hero-col p br { display: inline; }
+    .hero-col p br::before { content: " "; }
+    @media (min-width: 900px) {
+      .hero-col p br { display: block; }
+      .hero-col p br::before { content: none; }
     }
     .hero-col-label {
       font-size: 10px;
@@ -1519,15 +1532,15 @@
     <div class="hero-cols">
       <div class="hero-col">
         <div class="hero-col-label">Build</div>
-        <p>A custom, visual timeline for your business or project</p>
+        <p>A custom, visual timeline for<br>your business or project</p>
       </div>
       <div class="hero-col">
         <div class="hero-col-label">Share</div>
-        <p>Export a PDF or share a link with your clients or team</p>
+        <p>Export a PDF or share a link<br>with your clients or team</p>
       </div>
       <div class="hero-col">
         <div class="hero-col-label">Private</div>
-        <p>Your data lives in the link and this browser. No database. No tracking.
+        <p>Your data lives in the link and this browser.<br>No database. No tracking.
           <span class="info-icon" tabindex="0" aria-label="How your data is stored">&#9432;
             <span class="info-tooltip">d00r saves your work to your browser as you edit. To share it, keep it, or open it elsewhere, use Copy Link — that link contains your full plan. Clearing your browser data will erase any unsaved work.</span>
           </span>
@@ -1541,7 +1554,7 @@
     <div class="demos-grid" id="demosGrid"></div>
     <div class="demos-label" style="margin-top:36px">Templates — start from a real process</div>
     <div class="demos-grid" id="templatesGrid"></div>
-    <div style="margin-top:48px;padding-bottom:24px;font-size:10px;color:var(--ink-3);letter-spacing:.3px;font-family:'Space Mono',monospace;text-align:center;">v63</div>
+    <div style="margin-top:48px;padding-bottom:24px;font-size:10px;color:var(--ink-3);letter-spacing:.3px;font-family:'Space Mono',monospace;text-align:center;">v66</div>
   </section>
 </div>
 
@@ -1686,7 +1699,7 @@
           <button class="btn-solid" style="width:100%" id="copyUrlBtn">Copy URL</button>
         </div>
       </div>
-      <div style="padding:12px 16px;font-size:10px;color:var(--ink-3);letter-spacing:.3px;font-family:'Space Mono',monospace;">v63</div>
+      <div style="padding:12px 16px;font-size:10px;color:var(--ink-3);letter-spacing:.3px;font-family:'Space Mono',monospace;">v66</div>
     </aside>
 
     <!-- MAIN -->
@@ -1737,6 +1750,16 @@
 
 <script>
 /* CHANGELOG:
+   v66 - fix missing space on mobile hero-cols: hiding <br> with display:none also stripped
+         whitespace. Now <br> renders inline with ::before { content:" " } at narrow widths,
+         and display:block at >=900px for actual line break.
+   v65 - hero-col copy: added explicit <br> line breaks per user preference (even splits, no widows);
+         override text-wrap:pretty on those paragraphs so browser doesn't rebalance;
+         breaks only apply at >=900px viewport so narrower columns wrap naturally
+   v64 - hero cols (Build / Share / Private) were crunched at 660px while demo cards below spanned
+         1080px. Widened .hero to 1080px, kept h1 + sub tight via their own max-widths (660/540).
+         hero-cols now full-width with flex:1 cols that match the card grid below.
+         Also consolidated duplicate .hero h1 rules.
    v63 - truthfulness pass: "No Tracking" label + copy was misleading (we DO save to localStorage).
          Rewrote to "Private / Your data lives in the link and this browser. No database. No tracking."
          Tooltip explains the browser-save mental model and Copy Link as the "save" action.
